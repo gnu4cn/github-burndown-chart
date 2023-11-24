@@ -24,7 +24,7 @@ Issues =
             if response.statusCode is 200
                 json = ""
                 response.on "data", (chunk) -> json += chunk
-                
+
                 response.on "end", -> callback JSON.parse(json), type
             else
                 throw response.statusCode
@@ -117,7 +117,7 @@ getBurndown = ->
 
                         # Does this day fall on a weekend?
                         if dayOfWeek in Issues.config.weekend
-                            totalNonWorkingDays += 1                 
+                            totalNonWorkingDays += 1
                             # Save the day.
                             days[day] = { 'issues': [], 'actual': 0, 'ideal': 0, 'weekend': true  }
                         else
@@ -126,7 +126,7 @@ getBurndown = ->
                     else
                         # Save the day.
                         days[day] = { 'issues': [], 'actual': 0, 'ideal': 0, 'weekend': false  }
-                    
+
                     # Shift by a day.
                     day += 1000 * 60 * 60 * 24
                     # Increase the total count.
@@ -161,7 +161,7 @@ getBurndown = ->
                         current['size'] -= issue.size
                     # Save the oustanding count for that day.
                     days[day].actual = current['size']
-                    
+
                     # Save the predicted velocity for that day if it is not a non-working day.
                     ideal -= dailyIdeal unless days[day].weekend
                     days[day].ideal = ideal
@@ -226,6 +226,6 @@ app.router.path '/issues', ->
 fs.readFile "config.yml", "utf8", (err, data) ->
     Issues.config = yaml.load data
 
-    app.start process.env.PORT, (err) ->
+    app.start Issues.config.port || process.env.PORT, (err) ->
         throw err if err
         console.log "Listening on port #{app.server.address().port}"
